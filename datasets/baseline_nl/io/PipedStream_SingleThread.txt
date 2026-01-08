@@ -1,0 +1,1 @@
+A single thread attempted to use both a PipedInputStream instance and a PipedOutputStream instance, which may deadlock the thread.

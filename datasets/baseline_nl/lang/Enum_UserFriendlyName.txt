@@ -1,0 +1,1 @@
+Most programmers should use toString(). It gives a more user-friendly name.

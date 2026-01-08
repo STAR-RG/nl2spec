@@ -1,0 +1,1 @@
+An output stream is unavailable if the socket is closed, is not connected, or the socket output has been shutdown.

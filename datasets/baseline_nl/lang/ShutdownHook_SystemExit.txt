@@ -1,0 +1,1 @@
+Invoking System.exit() in a shutdown hook was suppressed because it may lead to deadlocks.

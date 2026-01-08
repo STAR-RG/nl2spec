@@ -1,0 +1,1 @@
+Using the constructor Character(char value) might be inefficient. Use valueOf(char c) if it is appropriate.

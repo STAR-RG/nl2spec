@@ -1,0 +1,1 @@
+Invoking close() on the object returned by Console.writer() does not close the underlying stream.

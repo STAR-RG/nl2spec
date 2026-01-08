@@ -1,0 +1,1 @@
+Math.random() is used by multiple threads. If there is contention, we recommend you to use Random.nextDouble().

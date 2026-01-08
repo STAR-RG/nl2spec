@@ -1,0 +1,1 @@
+BufferedReader and LineNumberReader allow reset() only after mark() has been invoked.

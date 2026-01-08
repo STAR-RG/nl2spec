@@ -1,0 +1,1 @@
+A closed random access file cannot perform input or output operations.

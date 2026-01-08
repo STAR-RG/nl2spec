@@ -1,101 +1,74 @@
-import json
 import random
 from pathlib import Path
-from typing import List, Optional, Dict
-
-from nl2spec.inspection.validate_ir import IRValidator
+from typing import List, Optional
 
 
 class FewShotLoader:
     """
-    Loader for few-shot IR examples.
+    Loader for few-shot examples (paths only).
 
     Responsibilities:
-    - Load JSON IR files from a directory tree
-    - Validate each IR against the canonical schema
-    - Filter by category
-    - Provide deterministic sampling
+    - Discover few-shot JSON files
+    - Organize by category (folder name)
+    - Deterministically sample file paths
+
+    It does NOT parse or validate IRs.
     """
 
-    def __init__(
-        self,
-        fewshot_dir: str,
-        schema_path: str,
-        seed: int = 42
-    ):
+    def __init__(self, fewshot_dir: str, seed: int = 42):
         self.fewshot_dir = Path(fewshot_dir)
-        self.schema_path = schema_path
         self.seed = seed
 
         if not self.fewshot_dir.exists():
-            raise FileNotFoundError(f"Few-shot directory not found: {self.fewshot_dir}")
+            raise FileNotFoundError(
+                f"Few-shot directory not found: {self.fewshot_dir}"
+            )
 
-        self.validator = IRValidator(schema_path)
-        self._cache: List[Dict] = []
+        self._index = self._build_index()
 
-        self._load_all()
+    def _build_index(self):
+        index = {}
 
-    # ------------------------------------------------------------------
-    # Internal loading
-    # ------------------------------------------------------------------
-    def _load_all(self) -> None:
-        """
-        Load and validate all JSON files under the few-shot directory.
-        Invalid examples are skipped.
-        """
-        for json_file in self.fewshot_dir.rglob("*.json"):
-            try:
-                with open(json_file, "r", encoding="utf-8") as f:
-                    data = json.load(f)
-            except Exception:
+        for category_dir in self.fewshot_dir.iterdir():
+            if not category_dir.is_dir():
                 continue
 
-            result = self.validator.validate_dict(data)
-            if result.valid:
-                data["_source"] = str(json_file)
-                self._cache.append(data)
+            files = sorted(category_dir.glob("*.json"))
+            if files:
+                index[category_dir.name.lower()] = files
 
-        if not self._cache:
-            raise RuntimeError("No valid few-shot examples found.")
+        return index
 
-    # ------------------------------------------------------------------
-    # Public API
-    # ------------------------------------------------------------------
-    def all(self) -> List[Dict]:
-        """
-        Return all loaded few-shot examples.
-        """
-        return list(self._cache)
+    def list_all(self, category: Optional[str] = None) -> List[str]:
+        if category:
+            return [
+                str(p.relative_to(self.fewshot_dir.parent))
+                for p in self._index.get(category.lower(), [])
+            ]
 
-    def by_category(self, category: str) -> List[Dict]:
-        """
-        Return all few-shot examples matching a category.
-        """
+        all_files = []
+        for files in self._index.values():
+            all_files.extend(files)
+
         return [
-            ex for ex in self._cache
-            if ex.get("category") == category
+            str(p.relative_to(self.fewshot_dir.parent))
+            for p in all_files
         ]
 
-    def sample(
-        self,
-        category: Optional[str] = None,
-        k: int = 1
-    ) -> List[Dict]:
-        """
-        Deterministically sample k examples.
+    def sample(self, category: str, k: int) -> List[str]:
+        pool = self._index.get(category.lower(), [])
 
-        If category is None, samples from all examples.
-        """
+        if not pool or k <= 0:
+            return []
+
         rng = random.Random(self.seed)
 
-        pool = self._cache
-        if category:
-            pool = self.by_category(category)
-
-        if not pool:
-            raise ValueError(f"No few-shot examples found for category: {category}")
-
         if k >= len(pool):
-            return list(pool)
+            selected = pool
+        else:
+            selected = rng.sample(pool, k)
 
-        return rng.sample(pool, k)
+        return [
+            str(p.relative_to(self.fewshot_dir.parent))
+            for p in selected
+        ]

@@ -1,0 +1,1 @@
+URL.setURLStreamHandlerFactory() can be called at most once in a given Java Virtual Machine.

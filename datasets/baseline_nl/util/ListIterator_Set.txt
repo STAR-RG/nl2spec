@@ -1,0 +1,1 @@
+ListIterator.set() can be made only if neither remove() nor add() have been called after the last call to next() or previous().

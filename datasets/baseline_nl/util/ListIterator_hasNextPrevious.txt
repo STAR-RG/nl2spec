@@ -1,0 +1,1 @@
+ListIterator.hasNext()/hasPrevious() was not called before calling next()/previous().

@@ -1,0 +1,1 @@
+ServerSocket.setSoTimeout() should be set prior to entering the blocking operation.

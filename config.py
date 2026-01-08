@@ -1,20 +1,16 @@
-from __future__ import annotations
-
 from pathlib import Path
 import yaml
 
 
-def load_config(path: str) -> dict:
-    p = Path(path)
-
-    if not p.is_absolute():
-        # agora resolve relativo ao pacote nl2spec
-        project_root = Path(__file__).resolve().parent
-        p = project_root / p
+def load_config(config_path: str):
+    """
+    Load YAML config from an explicit path.
+    The path is interpreted relative to the project root.
+    """
+    p = Path(config_path)
 
     if not p.exists():
-        raise FileNotFoundError(f"Config file not found: {p}")
+        raise FileNotFoundError(f"Config file not found: {p.resolve()}")
 
-    return yaml.safe_load(p.read_text(encoding="utf-8")) or {}
-
-
+    with open(p, "r", encoding="utf-8") as f:
+        return yaml.safe_load(f)

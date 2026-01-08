@@ -1,0 +1,1 @@
+flush() or close() should be invoked before toByteArray() or toString() to get the complete contents.

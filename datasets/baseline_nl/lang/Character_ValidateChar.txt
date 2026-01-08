@@ -1,0 +1,1 @@
+The code point used in charCount(int codePoint) is not valid.

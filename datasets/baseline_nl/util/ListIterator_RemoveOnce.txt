@@ -1,0 +1,1 @@
+ListIterator.remove() can be called only once per call to next()/previous().

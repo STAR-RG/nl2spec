@@ -1,0 +1,1 @@
+PushbackReader, InputStreamReader, FileReader and PipedReader do not support mark() and reset().

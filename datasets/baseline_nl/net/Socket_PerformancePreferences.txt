@@ -1,0 +1,1 @@
+Invoking Socket.setPerformancePreferences() after the socket has been bound will have no effect.

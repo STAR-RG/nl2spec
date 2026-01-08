@@ -1,0 +1,1 @@
+A shutdown hook was registered/unregister after the shutdown sequence had begun.

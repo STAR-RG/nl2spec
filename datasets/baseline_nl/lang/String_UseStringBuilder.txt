@@ -1,0 +1,1 @@
+Using the constructor String(StringBuilder builder) is inefficient. Use toString() method on the StringBuilder.

@@ -1,0 +1,1 @@
+The input to IDN.toASCII() should not be used in an internationalized domain name.

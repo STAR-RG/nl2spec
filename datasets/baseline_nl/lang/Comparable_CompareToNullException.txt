@@ -1,0 +1,1 @@
+NullPointerException should be thrown when an object is compared to null

@@ -1,0 +1,1 @@
+Using the constructor Double(double value) might be inefficient. Use valueOf(double) if it is appropriate.

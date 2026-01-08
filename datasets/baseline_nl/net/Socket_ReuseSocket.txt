@@ -1,0 +1,1 @@
+Once a socket has been closed, it is not available for further networking use; a new socket needs to be created.

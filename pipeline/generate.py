@@ -1,67 +1,45 @@
 import json
+import time
 from typing import Dict, Any
 
-from core.inspection.validate_ir import IRValidator
-from core.prompts.build_prompt import build_prompt
+from nl2spec.core.inspection.validate_ir import IRValidator
+from nl2spec.prompts.build_prompt import build_prompt
 
 
 class GenerationError(Exception):
-    """Raised when IR generation fails."""
+    pass
 
 
 def generate_one(
-    scenario_text: str,
-    fewshot_examples: list,
+    scenario: Dict[str, Any],
+    ir_type: str,
+    fewshot_files: list,
     llm,
-    schema_path: str,
-    instruction: str = None
+    schema_path: str
 ) -> Dict[str, Any]:
-    """
-    Generate a single IR from a natural language scenario.
 
-    Parameters:
-    - scenario_text: Natural language description
-    - fewshot_examples: List of validated IR examples
-    - llm: An object implementing generate(prompt: str) -> str
-    - schema_path: Path to the IR schema
-    - instruction: Optional custom instruction text
-
-    Returns:
-    - IR dictionary (validated)
-
-    Raises:
-    - GenerationError if generation or validation fails
-    """
-
-    # ------------------------------------------------------------------
     # 1. Build prompt
-    # ------------------------------------------------------------------
     prompt = build_prompt(
-        scenario_text=scenario_text,
-        fewshot_examples=fewshot_examples,
-        schema_path=schema_path,
-        instruction=instruction
+        ir_type=ir_type,
+        scenario_text=scenario["natural_language"],
+        fewshot_files=fewshot_files
     )
 
-    # ------------------------------------------------------------------
-    # 2. Call LLM (mock or real)
-    # ------------------------------------------------------------------
+    # 2. Call LLM
+    start = time.time()
     try:
         raw_output = llm.generate(prompt)
     except Exception as e:
         raise GenerationError(f"LLM call failed: {e}")
+    elapsed_ms = int((time.time() - start) * 1000)
 
-    # ------------------------------------------------------------------
     # 3. Parse JSON
-    # ------------------------------------------------------------------
     try:
         ir = json.loads(raw_output)
     except json.JSONDecodeError as e:
         raise GenerationError(f"Generated output is not valid JSON: {e}")
 
-    # ------------------------------------------------------------------
     # 4. Validate IR
-    # ------------------------------------------------------------------
     validator = IRValidator(schema_path)
     result = validator.validate_dict(ir)
 
@@ -71,4 +49,8 @@ def generate_one(
             + "\n".join(result.errors)
         )
 
-    return ir
+    return {
+        "ir": ir,
+        "prompt": prompt,
+        "generation_time_ms": elapsed_ms
+    }

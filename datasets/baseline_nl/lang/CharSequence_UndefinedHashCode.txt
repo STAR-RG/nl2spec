@@ -1,0 +1,1 @@
+equals and hashCode methods might not be supported in CharSequence
