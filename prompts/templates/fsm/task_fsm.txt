@@ -1,15 +1,33 @@
-The system behavior is defined in terms of explicit states and transitions.
+This specification should use the following name and parameters:
 
-The monitored events are:
+- name: {{SPEC_NAME}}
+- parameters: {{SIGNATURE_PARAMETERS}}
+
+Use this exact name consistently throughout the generated JSON.
+Keep the parameter list exactly as shown.
+
+This property is described as a finite-state behavior with explicit states and transitions.
+
+The monitored events involved in this property are:
 
 {{EVENT_BLOCK}}
 
-The finite state behavior is defined as follows:
+The FSM structure is the following:
 
 {{FSM_BLOCK}}
 
-Any execution that deviates from the state transition behavior described above constitutes a violation.
+In plain terms, this property means:
 
-The violation message that must be used in the JSON output is:
+{{FSM_SEMANTICS}}
+
+Any execution that does not follow this transition behavior, or that reaches an invalid behavior according to the rule below, must be treated as a violation.
+
+The violation message that must appear in the JSON output is:
 
 "{{VIOLATION_SEMANTICS}}"
+
+The generated JSON must include the field:
+
+"domain": "{{DOMAIN}}"
+
+Return ONLY the IR JSON.

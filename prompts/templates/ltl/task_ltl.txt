@@ -1,13 +1,32 @@
+This specification is called {{SPEC_NAME}}.
+
+It should use these parameters:
+{{SIGNATURE_PARAMETERS}}
+
+Keep this name and parameter list exactly in the generated JSON.
+
 The following events are monitored:
 
 {{EVENT_BLOCK}}
 
-The temporal property that must hold during execution is defined by the following formula:
+The temporal property that must hold during execution is:
 
-{{FORMULA}}
+{{LTL_BLOCK}}
 
-If this temporal property is violated at any point during execution, it constitutes a violation.
+In plain language, this means:
 
-The violation message that must be used in the JSON output is:
+{{LTL_SEMANTICS}}
 
-"{{VIOLATION_SEMANTICS}}"
+If this temporal property is violated during execution, the JSON output must use the following violation behavior:
+
+{{VIOLATION_SEMANTICS}}
+
+The generated JSON must include the field:
+
+"domain": "{{DOMAIN}}"
+
+Follow the same JSON structure used in the examples.
+Reuse the exact event names consistently.
+Do not invent new events, operators, or fields.
+
+Return ONLY the IR JSON.
