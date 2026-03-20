@@ -1,13 +1,13 @@
 from pathlib import Path
 import sys
 
-from nl2spec.core.convert.ir_to_nl import IRToNL
+from nl2spec.core.convert.nl.ir_to_nl import IRToNL
 
 #run: python -m nl2spec.scripts.run_generated_ir_to_nl
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-IR_ROOT = PROJECT_ROOT / "nl2spec" / "datasets" / "baseline_ir"
-NL_ROOT = PROJECT_ROOT / "nl2spec" / "datasets" / "baseline_nl"
+IR_ROOT = PROJECT_ROOT / "nl2spec" / "datasets" / "baseline_ir_temp"
+NL_ROOT = PROJECT_ROOT / "nl2spec" / "datasets" / "baseline_nl_temp"
 TEMPLATE_DIR = PROJECT_ROOT / "nl2spec"  / "prompts" / "templates"
 
 

@@ -42,7 +42,7 @@ def find_project_root(start: Path) -> Path:
 SCRIPT_PATH = Path(__file__).resolve()
 PROJECT_ROOT = find_project_root(SCRIPT_PATH.parent)
 
-BASELINE_DIR = PROJECT_ROOT / "nl2spec" / "datasets" / "baseline_ir"
+BASELINE_DIR = PROJECT_ROOT / "nl2spec" / "datasets" / "baseline_ir_temp"
 FEWSHOT_DIR = PROJECT_ROOT / "nl2spec" / "datasets" / "fewshot"
 RESULTS_DIR = PROJECT_ROOT / "results"
 FEWSHOT_RESULTS_DIR = RESULTS_DIR / "fewshot"
@@ -51,7 +51,7 @@ FEWSHOT_RESULTS_DIR = RESULTS_DIR / "fewshot"
 # CONFIGURAÇÃO EXPERIMENTAL
 # ======================================================
 
-TARGET_FORMALISM = "fsm"     # "ltl " | "fsm" | "event" | "ere" | "all"
+TARGET_FORMALISM = "event"     # "ltl " | "fsm" | "event" | "ere" | "all"
 SHOT_MODE = "few"            # "zero" | "one" | "few"
 K = 3                        #    0   |   1   | 3
 SELECTION = "structural"     # "structural" | "random"
@@ -66,7 +66,7 @@ def load_json(path: Path) -> dict:
 
 
 def get_ir_type(spec_json: dict) -> str:
-    return spec_json.get("ir", {}).get("type", "").lower()
+    return spec_json.get("formalism") or spec_json.get("ir", {}).get("type", "").lower()
 
 
 def _ensure_results_dir() -> None:
@@ -129,12 +129,12 @@ def main():
 
     total = 0
 
-    for domain_dir in BASELINE_DIR.iterdir():
+    #for domain_dir in BASELINE_DIR.iterdir():
 
-        if not domain_dir.is_dir():
-            continue
+    #    if not domain_dir.is_dir():
+    #        continue
 
-        for file_path in domain_dir.glob("*.json"):
+    for file_path in BASELINE_DIR.rglob("*.json"):
 
             spec_json = load_json(file_path)
             ir_type = get_ir_type(spec_json)

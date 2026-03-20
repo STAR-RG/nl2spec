@@ -4,7 +4,7 @@ import yaml
 from types import SimpleNamespace
 from pathlib import Path
 from nl2spec.config import load_config
-from nl2spec.core.llms.stage_llm import stage_llm
+from nl2spec.pipeline.stage_llm import stage_llm
 
 
 def load_config(path="config.yaml"):
