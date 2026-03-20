@@ -1,10 +1,19 @@
-from nl2spec.core.llms.llm_registry import load_llm_info
+from pathlib import Path 
+from nl2spec.core.llms.llm_registry import LLMRegistry
+from nl2spec.logging_utils import get_logger
 
+log = get_logger(__name__)
+
+BASE_DIR = Path(__file__).resolve().parents[2]
+
+registry = LLMRegistry(
+    BASE_DIR /  "llms" / "config" / "information_llms.csv"
+)
 
 def create_llm(cfg: dict):
 
     provider = cfg["llm"]["provider"]
-
+    model = cfg["llm"]["model"]
     # ----------------------------------------
     # MOCK PROVIDER (no registry dependency)
     # ----------------------------------------
@@ -15,8 +24,9 @@ def create_llm(cfg: dict):
     # ----------------------------------------
     # REAL PROVIDERS (need registry info)
     # ----------------------------------------
-    csv_path = cfg["llm"]["information"]
-    info = load_llm_info(provider, csv_path)
+
+    info =   info = registry.get(provider, model)
+    log.info("[LLM INIT] provider=%s | model=%s", provider, model)
 
     if provider == "gemini":
         from nl2spec.core.llms.gemini_llm import GeminiLLM
@@ -25,7 +35,7 @@ def create_llm(cfg: dict):
             model=info["model"],
         )
 
-    if provider == "openai":
+    if provider == "openAI":
         from nl2spec.core.llms.openai_llm import OpenAILLM
         return OpenAILLM(
             api_key=info["api_key"],

@@ -8,7 +8,7 @@ class OpenAILLM(BaseLLM):
         self.model = model
         self.client = OpenAI(api_key=api_key)
 
-    def generate(self, prompt: str) -> str:
+    def generate(self, prompt: str)-> tuple[str, object]:
 
         response = self.client.chat.completions.create(
             model=self.model,
@@ -18,7 +18,7 @@ class OpenAILLM(BaseLLM):
             temperature=0
         )
 
-        return response.choices[0].message.content.strip()
+        return response.choices[0].message.content.strip(), response.usage
 
     def close(self):
         # não é obrigatório, mas mantemos padrão
