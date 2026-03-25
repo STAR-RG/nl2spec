@@ -15,6 +15,7 @@ __pycache__/
 .env.*
 .idea/
 .vscode/
+core/llms/config/information_llms.csv
 
 # =========================
 # Logs e temporários
