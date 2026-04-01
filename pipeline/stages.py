@@ -8,7 +8,7 @@ from nl2spec.pipeline_types import PipelineFlags
 from nl2spec.logging_utils import get_logger
 from nl2spec.pipeline.nl_loader import load_nl_scenarios_by_domain
 from nl2spec.prompts.build_prompt import build_prompt
-from nl2spec.core.convert.nl.ir_to_nl import IRToNL
+from nl2spec.core.convert.nl.mop_to_nl import MOPToNL
 from nl2spec.core.convert.mop_to_ir import convert_mop_dir_to_ir
 from nl2spec.core.handlers.fewshot_loader import FewShotLoader
 
@@ -138,7 +138,7 @@ def _prepare_baseline_nl(cfg):
 
     log.info("Generating NL from IR...")
 
-    builder = IRToNL(TEMPLATE_DIR)
+    builder = MOPToNL(TEMPLATE_DIR)
 
     total = builder.generate_from_directory(
         baseline_ir_root,
